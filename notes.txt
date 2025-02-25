@@ -1,0 +1,24 @@
+SERVER---> Server is backend of Project
+    1- create a node app using npm init -y
+    2. install express and socket.io
+    3. install cors for security -> it specify which client/domain have access to our server - It allow only permitted clients
+    4. install nodemon for hot reload
+    5. write custom type as module for enabling es6 functionalities
+    6. Whenever we build socket.io servers -> we use HTTP HANDSHAKES to initialize and set up the server
+    7. 
+
+
+
+CLIENT---> Client is frontend of Project
+    1. npm create-vite@latest
+    2. create a react app with vite
+    3. inatall socket.io-client
+
+
+
+Description of the chat app
+
+-> fullstack chat application
+-> server security enabled using cors
+-> front end built on react using vite
+-> web RTC implemented using socket.io for real time communication
