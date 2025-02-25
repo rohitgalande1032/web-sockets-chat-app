@@ -28,9 +28,13 @@ io.on('connection', (socket) => {
     console.log('a new client has connected with id : ', socket.id)
 
 
-    socket.on("message", (data)=> {
-        console.log(data);
-        io.emit("message", data);
+    socket.on("message", ({message, room})=> {
+        console.log({message, room});
+        // io.emit("receive-message", data);
+        //socket.broadcast.emit("receive-message" , data)
+        //broadcast function sends the message to everyone except for the sender/persen who sent the message
+
+        socket.to(room).emit("receive-message", message)
     })
     // socket.emit("welcome", "Welcome to our chat application")
 

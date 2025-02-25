@@ -24,3 +24,15 @@ Description of the chat app
 -> server security enabled using cors
 -> front end built on react using vite
 -> web RTC implemented using socket.io for real time communication
+
+
+socket.emit ---> to send message to a Client
+io.emit --> to send a message to the whole server
+socket.braodcast.emit --> to send message to everyone except the sender
+socket.on --> to write receiver handling logic of the emit logic
+socket.to().emit --> it sends message to a specific client
+
+
+
+every client has a specified ID --> we can create ROOMS --> to enabling personal messaging
+-- we create a room and add only one person in it to allow person to person contact
