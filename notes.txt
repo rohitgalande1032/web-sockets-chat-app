@@ -5,7 +5,9 @@ SERVER---> Server is backend of Project
     4. install nodemon for hot reload
     5. write custom type as module for enabling es6 functionalities
     6. Whenever we build socket.io servers -> we use HTTP HANDSHAKES to initialize and set up the server
-    7. 
+    7. we are creating a server named io
+    8. io.on("connection", ()=>{}); this handles the connection
+    
 
 
 
