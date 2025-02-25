@@ -37,8 +37,12 @@ io.on('connection', (socket) => {
         socket.to(room).emit("receive-message", message)
     })
     // socket.emit("welcome", "Welcome to our chat application")
-
     // socket.broadcast.emit("welcome", `${socket.id} has joined the chat`)
+
+    socket.on("join-room", (RoomName)=> {
+        socket.join(RoomName)
+        console.log("user has joined room : ", RoomName)
+    })
 
     socket.on("disconnect", ()=> {
         console.log("a client has disconnected", socket.id)

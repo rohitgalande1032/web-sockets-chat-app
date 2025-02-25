@@ -1,62 +1,76 @@
-import { Container, TextField, Typography, Button } from '@mui/material';
+import { Container, TextField, Typography, Button, Stack, Paper, Box } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
-import {io} from 'socket.io-client'
-//this would be responsible for connection client with the server
+import { io } from 'socket.io-client';
 
 function App() {
-  const socket = useMemo(()=> io('http://localhost:3000'), [])
-
-  const [message, setMessage] = useState("")
-  const [room, setRoom] = useState("")
-  const [socketId, setSocketId] = useState("")
+  const socket = useMemo(() => io('http://localhost:3000'), []);
+  const [message, setMessage] = useState("");
+  const [room, setRoom] = useState("");
+  const [socketId, setSocketId] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [RoomName, setRoomName] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    socket.emit("message", {message, room})
-    setMessage("")
-  }
+    socket.emit("message", { message, room });
+    setMessage("");
+  };
+
+  const joinRoomName = (e) => {
+    e.preventDefault();
+    socket.emit("join-room", RoomName);
+    setRoomName("");
+  };
 
   useEffect(() => {
-    socket.on('connect', () => {
-      setSocketId(socket.id)
-      console.log('connected to the server', socket.id);
-    })
+    socket.on("connect", () => {
+      setSocketId(socket.id);
+      console.log("Connected to the server", socket.id);
+    });
 
-    socket.on("receive-message", (data) => {
-      console.log(data)
-    })
+    socket.on("receive-message", (message) => {
+      setMessages((prev) => [...prev, message]);
+    });
 
-    socket.on("welcome", (msg) => {
-      console.log(msg)
-    })
-
-    return ()=> {
-      socket.disconnect()
-    }
-
-  }, [])
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   return (
-    
-    <>
-      <Container>
-        <Typography variant='h5' component="div" gutterBottom>
-          Welcome to the chat application built by - Rohit
+    <Container maxWidth="sm" sx={{ mt: 5, textAlign: "center" }}>
+      <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
+        <Typography variant="h5" gutterBottom>
+          Welcome to the Chat App
         </Typography>
-        <Typography variant='h5' component="div" gutterBottom>
-          {socketId}
+        <Typography variant="subtitle1" color="textSecondary" gutterBottom>
+          Your ID: {socketId}
         </Typography>
-      </Container>
 
-      <form onSubmit={handleSubmit}>
-        <TextField type='text' value={message} onChange={(e)=> setMessage(e.target.value)} label="Message" variant='outlined'/>
-        <TextField type='text' value={room} onChange={(e)=> setRoom(e.target.value)} label="Room" variant='outlined'/>
-        <Button type='submit' variant="contained" color="primary">Send</Button>
-      </form>
-    </>
+        {/* Join Room Form */}
+        <Box component="form" onSubmit={joinRoomName} sx={{ mb: 2, display: 'flex', gap: 1 }}>
+          <TextField fullWidth label="Room Name" value={RoomName} onChange={(e) => setRoomName(e.target.value)} variant="outlined" size="small" />
+          <Button type="submit" variant="contained" color="primary">Join</Button>
+        </Box>
 
-    
-  )
+        {/* Send Message Form */}
+        <Box component="form" onSubmit={handleSubmit} sx={{ mb: 2, display: 'flex', gap: 1 }}>
+          <TextField fullWidth label="Message" value={message} onChange={(e) => setMessage(e.target.value)} variant="outlined" size="small" />
+          <TextField fullWidth label="Room" value={room} onChange={(e) => setRoom(e.target.value)} variant="outlined" size="small" />
+          <Button type="submit" variant="contained" color="secondary">Send</Button>
+        </Box>
+
+        {/* Messages Display */}
+        <Stack spacing={1} sx={{ maxHeight: 300, overflowY: 'auto', p: 2, borderRadius: 2, bgcolor: "#f5f5f5" }}>
+          {messages.map((msg, index) => (
+            <Paper key={index} elevation={1} sx={{ p: 1.5, borderRadius: 2, textAlign: "left" }}>
+              <Typography variant="body1">{msg}</Typography>
+            </Paper>
+          ))}
+        </Stack>
+      </Paper>
+    </Container>
+  );
 }
 
-export default App
+export default App;
